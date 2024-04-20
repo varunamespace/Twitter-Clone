@@ -1,5 +1,6 @@
 package pratice.twitter.domain;
 
+import com.fasterxml.jackson.annotation.JsonIgnore;
 import jakarta.persistence.*;
 import lombok.AllArgsConstructor;
 import lombok.Getter;
@@ -16,11 +17,14 @@ public class Tweet {
     @Id
     @GeneratedValue(strategy = GenerationType.AUTO)
     private Long id;
+    @Column(name = "tweets")
     private String tweets;
+
     public Tweet(String tweets){
         this.tweets = tweets;
     }
-    @OneToOne(cascade = CascadeType.ALL)
+    @ManyToOne(cascade = CascadeType.ALL)
     @JoinColumn()
+    @JsonIgnore
     User user;
 }
