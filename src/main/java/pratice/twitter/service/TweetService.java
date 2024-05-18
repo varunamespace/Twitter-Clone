@@ -29,4 +29,8 @@ public class TweetService{
         User user = userRepository.findByUserName(userDto.getUsername());
         return user.getTweets();
     }
+
+    public List<Tweet> getAllTweets(){
+        return tweetRepository.getAllTweets();
+    }
 }
