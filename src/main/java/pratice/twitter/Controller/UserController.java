@@ -10,6 +10,8 @@ import pratice.twitter.dto.UserDto;
 import pratice.twitter.service.TweetService;
 import pratice.twitter.service.UserService;
 
+import java.util.List;
+
 @RestController
 public class UserController {
     private UserService uService;
@@ -29,5 +31,9 @@ public class UserController {
         User user = new User();
         user.setUserName(userDto.getUsername());
         uService.saveUser(user);
+    }
+    @GetMapping("/getAllUser")
+    public List<User> getAllUser(){
+        return uService.getAllUsers();
     }
 }

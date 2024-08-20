@@ -31,6 +31,6 @@ public class TweetService{
     }
 
     public List<Tweet> getAllTweets(){
-        return tweetRepository.getAllTweets();
+        return tweetRepository.findAll();
     }
 }

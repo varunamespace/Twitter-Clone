@@ -16,23 +16,18 @@ public class TweetController {
         this.service = service;
     }
 
-    @PostMapping("/saveTweet")
-    public void saveTweet(@RequestBody TweetDto tweetDto){
-        service.saveTweet(tweetDto);
-    }
-
-    @GetMapping("/getTweet")
-    public List<Tweet> getTweet(@RequestBody UserDto userDto){
+    @GetMapping("/getTweetsByUsername")
+    public List<Tweet> getTweetsByUsername(@RequestBody UserDto userDto){
         return service.getTweetsByUserName(userDto);
-    }
-
-    @GetMapping("/home")
-    public String showHome(){
-        return "hello";
     }
 
     @GetMapping("/getAllTweets")
     public List<Tweet> getAllTweets(){
         return service.getAllTweets();
+    }
+
+    @PostMapping("/saveTweet")
+    public void saveTweet(@RequestBody TweetDto tweetDto){
+        service.saveTweet(tweetDto);
     }
 }
