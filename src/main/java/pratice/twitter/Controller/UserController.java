@@ -1,5 +1,6 @@
 package pratice.twitter.Controller;
 
+import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
 import org.springframework.web.bind.annotation.*;
@@ -13,13 +14,10 @@ import pratice.twitter.service.UserService;
 import java.util.List;
 
 @RestController
+@RequiredArgsConstructor
 public class UserController {
-    private UserService uService;
-    private TweetService tweetService;
-    public UserController(UserService uService,TweetService tweetService){
-        this.uService = uService;
-        this.tweetService = tweetService;
-    }
+    private final UserService uService;
+
     @PostMapping("/user/{name}")
     public void createUser(@PathVariable String name){
         User user = new User(name);
