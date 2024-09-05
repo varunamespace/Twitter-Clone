@@ -37,11 +37,11 @@ public class JwtAuthenticationFilter extends OncePerRequestFilter {
             return;
         }
 
-        //token
+        //updating the token
         jwt = authHeader.substring(7);
         userEmail = jwtService.extractUserName(jwt);
         if(userEmail!=null && SecurityContextHolder.getContext().getAuthentication()==null){
-            UserDetails userDetails = this.userDetailsService.loadUserByUsername(userEmail);
+            UserDetails userDetails = userDetailsService.loadUserByUsername(userEmail);
             if(jwtService.isTokenValid(userEmail,userDetails)){
                 //generate the authentication token and update it in  security context holder
                 UsernamePasswordAuthenticationToken authToken =
