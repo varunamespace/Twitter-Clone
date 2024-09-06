@@ -2,6 +2,7 @@ package pratice.twitter.service;
 
 import io.jsonwebtoken.Claims;
 import io.jsonwebtoken.Jwts;
+import io.jsonwebtoken.SignatureAlgorithm;
 import io.jsonwebtoken.io.Decoders;
 import io.jsonwebtoken.security.Keys;
 import org.springframework.security.core.userdetails.User;
@@ -14,7 +15,9 @@ import java.util.function.Function;
 
 @Service
 public class JwtService {
-    private static final  String SECRET_KEY = "48cbb609cad07b48b77681e278f37031da4a84d28fb552b84b326400c3f5e747";
+    private final String SECRET_KEY = "404E635266556A586E3272357538782F413F4428472B4B6250645367566B5970";
+    private final long jwtExpiration = 86400000;
+//    private long refreshExpiration = 604800000;
 
     public String extractUserName(String token){
         return extractClaims(token,Claims::getSubject);
@@ -28,30 +31,37 @@ public class JwtService {
     private Claims extractAllClaims(String token){
         return Jwts
                 .parserBuilder()
-                .setSigningKey(getSigningKey())
+                .setSigningKey(getSignInKey())
                 .build()
                 .parseClaimsJws(token)
                 .getBody();
     }
 
-    private Key getSigningKey(){
+    private Key getSignInKey(){
         byte[] keyBytes = Decoders.BASE64.decode(SECRET_KEY);
         return Keys.hmacShaKeyFor(keyBytes);
     }
 
-    public String generateToken(Map<String, Objects> extraClaims, UserDetails userDetails){
+    public String buildToken(Map<String, Object> extraClaims, UserDetails userDetails
+    ,long expiration){
         return Jwts
                 .builder()
                 .setClaims(extraClaims)
                 .setSubject(userDetails.getUsername())
                 .setIssuedAt(new Date(System.currentTimeMillis()))
-                .setExpiration(new Date(System.currentTimeMillis() + 1000 * 60 * 24))
+                .setExpiration(new Date(System.currentTimeMillis() + expiration))
+                .signWith(getSignInKey(),SignatureAlgorithm.HS256)
                 .compact();
     }
 
     public String generateToken(UserDetails userDetails){
         return generateToken(new HashMap<>(),userDetails);
     }
+
+    public String generateToken(Map<String,Object> extraClaims, UserDetails userDetails){
+        return buildToken(extraClaims,userDetails,jwtExpiration);
+    }
+
 
     public Boolean isTokenValid(String token, UserDetails userDetails){
         final String userName = extractUserName(token);

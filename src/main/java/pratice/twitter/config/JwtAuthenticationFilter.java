@@ -37,7 +37,7 @@ public class JwtAuthenticationFilter extends OncePerRequestFilter {
             return;
         }
 
-        //updating the token
+        //check if token is valid and update in the context holder.
         jwt = authHeader.substring(7);
         userEmail = jwtService.extractUserName(jwt);
         if(userEmail!=null && SecurityContextHolder.getContext().getAuthentication()==null){
