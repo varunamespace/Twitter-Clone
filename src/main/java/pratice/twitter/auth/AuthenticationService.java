@@ -6,6 +6,7 @@ import org.springframework.security.authentication.AuthenticationManager;
 import org.springframework.security.authentication.UsernamePasswordAuthenticationToken;
 import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Service;
+import pratice.twitter.domain.Role;
 import pratice.twitter.domain.User;
 import pratice.twitter.domain.UserRepository;
 import pratice.twitter.service.JwtService;
@@ -23,6 +24,7 @@ public class AuthenticationService {
                 .userName(request.getUsername())
                 .email(request.getEmail())
                 .password(passwordEncoder.encode(request.getPassword()))
+                .role(Role.USER)
                 .build();
         repository.save(user);
         var jwtToken = jwtService.generateToken(user);
