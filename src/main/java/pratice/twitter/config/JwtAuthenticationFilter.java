@@ -28,27 +28,20 @@ public class JwtAuthenticationFilter extends OncePerRequestFilter {
     protected void doFilterInternal(@NonNull HttpServletRequest request,
                                     @NonNull HttpServletResponse response,
                                     @NonNull FilterChain filterChain) throws ServletException, IOException {
-        String authHeader = request.getHeader("Authorization");
-        String jwt;
-        String userEmail;
+        final String authHeader = request.getHeader("Authorization");
+        final String jwt;
+        final String userEmail;
         //check whether auth header is null or does not start with bearer
         if(authHeader==null || !authHeader.startsWith("Bearer ")){
-            System.out.println("authHeader: " + authHeader);
-            System.out.println("not having the bearer");
             filterChain.doFilter(request,response);
             return;
         }
 
-        //check if token is valid and update in the context holder.
-//        System.out.println("before substr: " + jwt);
         jwt = authHeader.substring(7);
-        System.out.println("after substr: " + jwt);
         userEmail = jwtService.extractUserName(jwt);
         if(userEmail!=null && SecurityContextHolder.getContext().getAuthentication()==null){
-            System.out.println("having the bearer");
-            System.out.println("jwt token: " + jwt);
             UserDetails userDetails = userDetailsService.loadUserByUsername(userEmail);
-            if(jwtService.isTokenValid(userEmail,userDetails)){
+            if(jwtService.isTokenValid(jwt,userDetails)){
                 //generate the authentication token and update it in  security context holder
                 UsernamePasswordAuthenticationToken authToken =
                         new UsernamePasswordAuthenticationToken(userDetails,null,userDetails.getAuthorities());
