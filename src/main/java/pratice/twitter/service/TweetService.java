@@ -1,5 +1,7 @@
 package pratice.twitter.service;
 
+import org.springframework.cache.annotation.CacheConfig;
+import org.springframework.cache.annotation.Cacheable;
 import org.springframework.stereotype.Service;
 import pratice.twitter.domain.Tweet;
 import pratice.twitter.domain.TweetRepository;
@@ -11,6 +13,7 @@ import pratice.twitter.dto.UserDto;
 import java.util.List;
 
 @Service
+@CacheConfig(cacheNames = "tweetCache")
 public class TweetService{
     private final TweetRepository tweetRepository;
     private final UserRepository userRepository;
@@ -25,11 +28,12 @@ public class TweetService{
         tweet.setTweets(tweetDto.getTweet());
         tweetRepository.save(tweet);
     }
+    @Cacheable(key = "#userDto.username")
     public List<Tweet> getTweetsByUserName(UserDto userDto){
         User user = userRepository.findByUserName(userDto.getUsername());
         return user.getTweets();
     }
-
+    @Cacheable
     public List<Tweet> getAllTweets(){
         return tweetRepository.findAll();
     }
